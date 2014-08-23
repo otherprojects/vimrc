@@ -20,6 +20,13 @@
 " F10 (close no cascading)
 " F12 (escape/close cascading)
 
+" Functions--------------------------------------
+" Load(filename) == <S-L> 
+" load file in the new tab
+"
+" CLoad(object) == <S-C>
+" load header and source file in the new tab
+
 "Movement----------------------------------------
 
  
@@ -184,6 +191,10 @@ endfunction
 :map <F6> <ESC>:wa<CR>
 :map <F2> <ESC>:tabp<CR>
 :map <F3> <ESC>:tabn<CR>
+
+:inoremap <F6> <ESC>:wa<CR>i
+:inoremap <F2> <ESC>:tabp<CR>i
+:inoremap <F3> <ESC>:tabn<CR>i
 :map - <ESC>:e.<CR>
 
 "Open in a new tab
@@ -193,7 +204,8 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""
 "open and close tabs <F12> allows cascading closure
 
-:map <F4> <ESC>:tabnew<CR>:vsplit<CR>:vertical resize 120<CR>:OpenNERDTree<CR>\\<C-W>l:e.<CR>'<CR>
+:map <F4> <ESC>:tabnew<CR>:vsplit<CR>:vertical resize 120<CR>:OpenNERDTree<CR>\\<C-W>l:e.<CR>'
+:inoremap <F4> <ESC><F4>
 :map <F10> <ESC>:q<CR>
 :map <F12> <ESC>:q!<CR>:q!<CR>:q!<CR>tabp<CR>
 
@@ -273,6 +285,35 @@ function CPPShortcuts()
 :inoremap <c-F> #include <fstream>
 :inoremap <c-L> endl;
 endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" functions
+
+"Load C++/C Object (.cc / .cpp/ .c/ .h) support
+"files
+:map <s-C> :call CLoad("
+function CLoad(object)
+:tabnew
+:vsplit
+:vertical resize 120 
+:OpenNERDTree
+:call feedkeys("\<C-W>l")
+:call feedkeys(":edit ".a:object.".c*\<CR>" )
+:call feedkeys("\<C-W>l")
+:call feedkeys(":edit ".a:object.".h\<CR>" )
+endfunction
+
+"Regular load in new tab"
+:map <S-L> :call Load("
+function Load(object)
+:tabnew
+:vsplit
+:vertical resize 120 
+:OpenNERDTree
+:call feedkeys("\<C-W>l")
+:call feedkeys(":edit ".a:object."\<CR>" )
+endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""""
 " Switches
 
