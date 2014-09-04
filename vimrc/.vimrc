@@ -85,7 +85,11 @@
 " 
 """""""""""""""""""""""""""""""""""""""""""""""""
 " Open Vimrc
-
+"
+" Some problem in vim of cursor sliding back
+" http://stackoverflow.com/questions/2295410/
+" prevent-cursor-from-moving-back-one-character-on-insert-mode-exit
+""""""""""""""""""""""""""""""""""""""""""""""""
 map  <C-H> <ESC>:e $HOME/.vimrc<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -113,14 +117,14 @@ function OpenNERDTree()
 endfunction
 
 command -nargs=0 OpenNERDTree :call OpenNERDTree()
-autocmd VimEnter * NERDTree
+"autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
-:vsplit
+":vsplit
 :call feedkeys("\<C-W>l")
-:call feedkeys(":set nowrap\<CR>")
-:call feedkeys(":set nu\<CR>")
-:call feedkeys(":e $HOME/.vimrc\<CR>")
-:call feedkeys("\<C-W>h")
+":call feedkeys(":set nowrap\<CR>")
+":call feedkeys(":set nu\<CR>")
+":call feedkeys(":e $HOME/.vimrc\<CR>")
+":call feedkeys("\<C-W>h")
 :vertical resize 120
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
@@ -168,7 +172,7 @@ endfunction
 
 "Move and move to insert mode"
 :map <Down> ji
-:map <Left> hi 
+:map <Left> ,i
 :map <Right> li
 :map <Up> ki
 
@@ -251,10 +255,11 @@ function Reset()
 """"""""""""""""""""""""""""""""""""""""""""""""""
 "open and close tabs <F12> allows cascading closure
 
-:map <F4> <ESC>:tabnew<CR>:vsplit<CR>:vertical resize 120<CR>:OpenNERDTree<CR>\\<C-W>l:e.<CR>'
+":map <F4> <ESC>:tabnew<CR>:vsplit<CR>:vertical resize 120<CR>:OpenNERDTree<CR>\\<C-W>l:e.<CR>'
+:map <F4> <ESC>:tabnew<CR>:OpenNERDTree<CR>\
 :inoremap <F4> <ESC><F4>
 :map <F10> <ESC>:q<CR>
-:map <F12> <ESC>:q!<CR>:q!<CR>:q!<CR>tabp<CR>
+:map <F12> <ESC>:q!<CR>:q!<CR>tabp<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""
 "Go to <number>
@@ -312,6 +317,8 @@ endfunction
 function TextWrapping()
 :set tabstop=4
 :highlight ColorColumn ctermbg=750
+: set whichwrap+=<,>,h,l,[,]
+:set colorcolumn=80
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -338,6 +345,7 @@ endfunction
 "Load C++/C Object (.cc / .cpp/ .c/ .h) support
 "files
 :map <s-C> :call CLoad("
+"""""""""""""""""""""""""""""""""""""""""""""""""
 function CLoad(object)
 :tabnew
 :vsplit
@@ -358,6 +366,39 @@ function Load(object)
 :OpenNERDTree
 :call feedkeys("\<C-W>l")
 :call feedkeys(":edit ".a:object."\<CR>" )
+endfunction
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" BoosterKeys
+
+" Added on September 2014
+"
+" [  F  ]  Search (better than :/ to search)
+" [  G  ]  Move cursor ten lines to the right
+" [  S  ]  Move cursor ten lines to the left
+" [  Q  ]  Quit all
+" [  T  ]  three spaces (tab)
+" [ S-A ]  Anchor
+
+:let s:line = 4
+
+function Anchor()
+:let s:line = ( line(".") )
+echo s:line
+endfunction
+
+function FallBack()
+:execute string(s:line)
+endfunction
+
+function BoosterKeys()
+:map f :/
+:map g llllllllll
+:map s hhhhhhhhhh
+:map q :qa<CR>:w
+:map <s-a> :call Anchor()<CR>
+:map <s-b> :call FallBack()<CR>
+:map t i<space><space><space>
+
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -384,3 +425,5 @@ endfunction
 ":call CPPShortcuts()
 
 :call CStyle()
+
+:call BoosterKeys()
